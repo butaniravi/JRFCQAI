@@ -1,0 +1,8 @@
+name: JRFC_QAI_GCS
+description: ""
+ports: []
+bricks:
+- arduino:web_ui: {}
+- arduino:video_object_detection:
+    model: yolox-object-detection
+icon: 😀
