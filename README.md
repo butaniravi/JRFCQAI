@@ -24,7 +24,7 @@ By leveraging the **Dual-Brain Architecture** of the UNO Q, this framework split
 
 ## 🛠️ Hardware Architecture & Sensor Interfaces
 
-* **Flight Controller Core:** Arduino UNO Q (Powered directly via VIN with a $1000\mu\text{F}$ 50V filter capacitor from a 3S 6000mAh LiPo).
+* **Flight Controller Core:** Arduino UNO Q (Powered directly via VIN with a $100\mu\text{F}$ 50V filter capacitor from a 3S 6000mAh LiPo).
 * **Sensors (I2C1 QWIIC Port @ 400kHz):**
   * **MPU6050:** 6-DOF Gyroscope / Accelerometer
   * **MS5611:** Barometric Pressure / Altitude sensor
