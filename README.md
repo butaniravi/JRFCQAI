@@ -73,7 +73,7 @@ Watch the full build breakdown and flight demo on YouTube:
 2. **Zephyr RTOS Kernel Hacks for PWM:** Overcame default 500Hz PWM constraints by hacking the underlying Zephyr RTOS layer to modify default output down to 350Hz, enabling precise ESC and servo synchronization.
 3. **Serial Buffer Expansion for GPS Data:** Prevented packet loss on the standard 64-byte UART buffer by patching Zephyr RTOS to allocate a 512-byte UART RX buffer for loss-free u-blox GPS parsing.
 4. **Optimized 250Hz PID Execution Loop:** Implemented `k_yield()` and `k_sleepus()` inside the main flight loop to guarantee a fixed 4ms (250Hz) execution cycle with ~3ms of spare processing headroom per loop.
-5. **Zero-Blocking RPC Bridge Communication:** Replaced blocking `bridge.provide()` calls (which introduce 5–7ms delays in flight loop timing) with asynchronous `bridge.notify()` fire-and-forget RPC calls for non-blocking telemetry sync between the STM32 flight core and Qualcomm Linux host.
+5. **Zero-Blocking RPC Bridge Communication:** Replaced blocking `bridge.call()` calls (which introduce 5–7ms delays in flight loop timing) with asynchronous `bridge.notify()` fire-and-forget RPC calls for non-blocking telemetry sync between the STM32 flight core and Qualcomm Linux host.
 6. **Core Architecture Migration:** Ported and expanded the YMFC-32 Autonomous framework from legacy STM32F103 bare-metal registers to the modern STM32U5 platform running Zephyr RTOS, replacing PPM-SUM receiver input with native iBus support.
 
 ---
