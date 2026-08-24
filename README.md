@@ -74,7 +74,7 @@ Watch the full build breakdown and flight demo on YouTube:
 
    * **Expand UART Receive Buffer Size:**  
      Open `ZephyrSerial.h` located at:  
-     `C:\Users\ravib\AppData\Local\Arduino15\packages\arduino\hardware\zephyr\0.90.0\cores\arduino\ZephyrSerial.h`  
+     `C:\Users\xxx\AppData\Local\Arduino15\packages\arduino\hardware\zephyr\0.90.0\cores\arduino\ZephyrSerial.h`  
      Locate line 54 inside `ZephyrSerialBuffer` and set the buffer array size to 512 bytes:
      ```cpp
      class ZephyrSerial : public HardwareSerial {
