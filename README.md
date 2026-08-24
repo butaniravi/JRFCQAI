@@ -37,6 +37,7 @@ By leveraging the **Dual-Brain Architecture** of the UNO Q, this framework split
   * **Battery Telemetry:** Voltage monitoring on Pin `A0` via a 10K/1K resistor voltage divider
   * **Status Indicators:** RGB Status LEDs on `D11`, `D12`, `D13`
 * **Vision System:** Direct USB Webcam connected to the UNO Q Type-C port, powered externally via a dedicated 5V Buck Converter.
+
 ---
 
 ## 📹 Media & Video Demonstration
@@ -48,10 +49,44 @@ Watch the full build breakdown and flight demo on YouTube:
 
 ## 💻 Quick Start & Software Setup
 
-### 1. Flight Controller Firmware (MCU)
+### 1. Flight Controller Firmware (MCU) & Core Patches
 1. Open `UNOQ_JRFCQAI_MAIN` in the **Arduino IDE**.
 2. Select your **Arduino UNO Q** board target.
-3. Flash the sketch to the board to initialize the STM32U585 real-time flight loop.
+3. **Apply Zephyr RTOS Core Patches (Required for 350Hz PWM & GPS Parsing):**
+
+   * **Modify Hardware PWM Frequency:**  
+     Open `wiring_analog.cpp` located at:  
+     `C:\Users\xxx\AppData\Local\Arduino15\packages\arduino\hardware\zephyr\0.56.0\cores\arduino\wiring_analog.cpp`  
+     Locate around line 141 and update the implementation to set a custom period:
+     ```cpp
+     value = CLAMP(value, 0, maxInput);
+     //const uint32_t pulse = map64(value, 0, maxInput, 0, arduino_pwm[idx].period);
+
+     /*
+      * A duty ratio determines by the period value defined in dts
+      * and the value arguments. So usually the period value sets as 255.
+      */
+     //(void)pwm_set_pulse_dt(&arduino_pwm[idx], pulse);
+     const uint32_t custom_period = 2500000UL;
+     const uint32_t pulse = map64(value, 0, maxInput, 0, custom_period);
+     (void)pwm_set(arduino_pwm[idx].dev, arduino_pwm[idx].channel, custom_period, pulse, arduino_pwm[idx].flags);
+     ```
+
+   * **Expand UART Receive Buffer Size:**  
+     Open `ZephyrSerial.h` located at:  
+     `C:\Users\ravib\AppData\Local\Arduino15\packages\arduino\hardware\zephyr\0.90.0\cores\arduino\ZephyrSerial.h`  
+     Locate line 54 inside `ZephyrSerialBuffer` and set the buffer array size to 512 bytes:
+     ```cpp
+     class ZephyrSerial : public HardwareSerial {
+     public:
+         template <int SZ> class ZephyrSerialBuffer {
+             friend arduino::ZephyrSerial;
+             struct ring_buf ringbuf;
+             uint8_t buffer[512]; // ---> Hardcode SZ to 512
+             struct k_sem sem;
+     ```
+
+4. Flash the sketch to the board to initialize the STM32U585 real-time flight loop.
 
 ### 2. Ground Station & AI System (MPU)
 1. Launch **Arduino AppLab**.
@@ -90,7 +125,6 @@ Watch the full build breakdown and flight demo on YouTube:
 - [ ] Return to Home (RTH) Execution *(Implemented, pending field test)*
 - [ ] Autonomous Waypoint Navigation *(Implemented, pending field test)*
 - [ ] Framework expansion for Hexcopter & Fixed-Wing platforms
-
 
 ---
 
