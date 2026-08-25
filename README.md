@@ -64,8 +64,8 @@ By leveraging the **Dual-Brain Architecture** of the UNO Q, this framework split
 | Signal State | LED Pattern | Flash Rate |
 | :--- | :--- | :--- |
 | **No Valid GPS** | *(Off / Solid)* | No Signal |
-| **GPS Available** | 🟢 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🟢 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🟢 | Pulse (5Hz) |
-| **GPS Lock** | 🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢 | Rapid Blink (25Hz) |
+| **GPS Available** | 🔴 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🔴 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🔴 | Pulse (5Hz) |
+| **GPS Lock** | 🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴 | Rapid Blink (25Hz) |
 ---
 ### ⚠️ Diagnostic & Error LED Codes
 
