@@ -23,7 +23,12 @@ By leveraging the **Dual-Brain Architecture** of the UNO Q, this framework split
 ---
 
 ## 🛠️ Hardware Architecture & Sensor Interfaces
-
+<!-- Centered Hardware Diagram -->
+<p align="center">
+  <img src="Photos and diagrams/connection_jrfcqai.png" alt="JRFCQAI Hardware Wiring Diagram" width="700">
+  <br>
+  <em>Figure 1: Complete wiring layout between Arduino UNO Q, sensors, and ESCs.</em>
+</p>
 * **Flight Controller Core:** Arduino UNO Q (Powered directly via VIN with a $100\mu\text{F}$ 50V filter capacitor from a 3S 6000mAh LiPo).
 * **Sensors (I2C1 QWIIC Port @ 400kHz):**
   * **MPU6050:** 6-DOF Gyroscope / Accelerometer
