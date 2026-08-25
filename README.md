@@ -47,6 +47,28 @@ By leveraging the **Dual-Brain Architecture** of the UNO Q, this framework split
   * **Status Indicators:** RGB Status LEDs on `D11`, `D12`, `D13`
 * **Vision System:** Direct USB Webcam connected to the UNO Q Type-C port, powered externally via a dedicated 5V Buck Converter.
 ---
+### 🚨 LED Status Indicators & Blink Codes
+
+**Normal Startup LED Procedure**
+
+| Pattern | LED Sequence | State / Description |
+| :--- | :--- | :--- |
+| Calibration Delay | 🔴 🔴 🔴 🔴 🔴 🔴 🔴 | Initial delay on boot (5 seconds) |
+| Gyro Calibration | 🔴🔴 🔴🔴 🔴🔴 🔴🔴 🔴🔴 | Calibrating gyroscope (8 seconds) |
+| Flight Mode 1 | 🟢 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🟢 | Auto Level Mode active |
+| Flight Mode 2 | 🟢🟢 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🟢🟢 | Altitude Hold Mode active |
+| Flight Mode 3 | 🟢🟢🟢 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🟢🟢🟢 | Altitude & GPS Hold Mode active |
+
+---
+
+**GPS LED Indicators (UNO Q - ON BOARD RED LED)**
+
+| Signal State | LED Pattern | Flash Rate |
+| :--- | :--- | :--- |
+| **No Valid GPS** | *(Off / Solid)* | No Signal |
+| **GPS Available** | 🟢 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🟢 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🟢 | Pulse (5Hz) |
+| **GPS Lock** | 🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢 | Rapid Blink (25Hz) |
+---
 
 ## 📹 Media & Video Demonstration
 
