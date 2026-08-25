@@ -97,9 +97,7 @@ By leveraging the **Dual-Brain Architecture** of the UNO Q, this framework split
 ## 📹 Media & Video Demonstration
 
 Watch the full build breakdown and flight demo on YouTube:  
-<a href="https://www.youtube.com/watch?v=u1FR_EWiBVY&list=PLfxRMvKGemR4" target="_blank">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/YouTube_logo_2015.svg" width="80" alt="YouTube" valign="middle">
-</a> **[JRFCQAI Video Playlist](https://www.youtube.com/watch?v=u1FR_EWiBVY&list=PLfxRMvKGemR4)**
+[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=u1FR_EWiBVY&list=PLfxRMvKGemR4) **[JRFCQAI Video Playlist](https://www.youtube.com/watch?v=u1FR_EWiBVY&list=PLfxRMvKGemR4)**
 
 ---
 
