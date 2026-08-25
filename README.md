@@ -197,4 +197,8 @@ Special thanks and full attribution to **Joop Broking**, creator of the original
 
 ## ⚠️ Disclaimer
 
-*This is an experimental, open-source educational project developed for testing and research purposes. Unmanned Aerial Vehicles (UAVs) can cause physical injury or property damage if mishandled. This framework is provided **"AS IS"**, without warranty or guarantee of any kind. Operate experimental hardware at your own risk, follow local aviation regulations, and adhere to strict safety protocols during testing.*
+<font color="#D9381E">
+
+*This is an **experimental, open-source educational project** developed strictly for testing and research purposes. **Unmanned Aerial Vehicles (UAVs) can cause severe physical injury or property damage if mishandled.** This framework is provided **"AS IS"**, without warranty or guarantee of any kind. **Operate experimental hardware entirely at your own risk**, follow all local aviation regulations, and adhere to strict safety protocols during testing.*
+
+</font>
