@@ -58,6 +58,7 @@ By leveraging the **Dual-Brain Architecture** of the UNO Q, this framework split
 | Flight Mode 1 | 🟢 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🟢 | Auto Level Mode active |
 | Flight Mode 2 | 🟢🟢 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🟢🟢 | Altitude Hold Mode active |
 | Flight Mode 3 | 🟢🟢🟢 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🟢🟢🟢 | Altitude & GPS Hold Mode active |
+---
 **GPS LED Indicators (UNO Q - ON BOARD RED LED)**
 
 | Signal State | LED Pattern | Flash Rate |
