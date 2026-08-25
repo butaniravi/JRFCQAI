@@ -42,7 +42,7 @@ By leveraging the **Dual-Brain Architecture** of the UNO Q, this framework split
   * **u-blox NEO-M8N GPS:** Connected via UART3 (115200 baud)
   * **Flysky FS-iA6B 10CH Receiver:** iBus interface on UART1 (115200 baud)
 * **Actuators & Monitoring:**
-  * **4x BLDC ESCs:** Driven at 350Hz on Hardware PWM Pins (`D3`, `D5`, `D6`, `D9`)
+  * **4x BLDC ESCs >30 Amp:** Driven at 350Hz on Hardware PWM Pins (`D3`, `D5`, `D6`, `D9`)
   * **Frame:** S500 Quadcopter frame is used in this project for other frame and ESC/BLDC combo please tune default PIDs
   * **Battery Telemetry:** Voltage monitoring on Pin `A0` via a 10K/1K resistor voltage divider
   * **Status Indicators:** RGB Status LEDs on `D11`, `D12`, `D13`
