@@ -60,7 +60,30 @@ By leveraging the **Dual-Brain Architecture** of the UNO Q, this framework split
 | Flight Mode 3 | 🟢🟢🟢 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🟢🟢🟢 | Altitude & GPS Hold Mode active |
 
 ---
+### ⚠️ Diagnostic & Error LED Codes
 
+**Errors During Startup**
+
+| Pattern | Error Code / State | Description |
+| :--- | :--- | :--- |
+| 🔴 | Error 1 | MPU-6050 does not respond |
+| 🔴🔴 | Error 2 | HMC5883L does not respond |
+| 🔴🔴🔴 | Error 3 | MS5611 does not respond |
+| 🔴🔴🔴🔴 | Error 4 | No receiver detected |
+
+---
+
+**Errors After Startup**
+
+| Pattern | Error Code / State | Description |
+| :--- | :--- | :--- |
+| 🔴 | Error 1 | Battery low |
+| 🔴🔴 | Error 2 | Program loop time exceeded |
+| 🔴🔴🔴 | Error 3 | ACC calibration angle limit |
+| 🔴🔴🔴🔴 | Error 4 | GPS watchdog time exceeded |
+| 🔴🔴🔴🔴🔴 | Error 5 | manual_takeoff_throttle not in range |
+| 🔴🔴🔴🔴🔴🔴 | Error 6 | No take-off detected |
+| 🔴🔴🔴🔴🔴🔴🔴 | Error 7 | Take-off throttle out of range |
 **GPS LED Indicators (UNO Q - ON BOARD RED LED)**
 
 | Signal State | LED Pattern | Flash Rate |
