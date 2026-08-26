@@ -161,14 +161,15 @@ Watch the full build breakdown and flight demo on YouTube:
 > ```
 
 ---
-<p align="center">
+
   <img src="Photos%20and%20diagrams/GCS.png" alt="JRFCQAI GCS Webpage" width="700">
   <br>
   <em>Figure 3: JRFCQAI GCS Webpage hosted by UNO Q with Live AI Video stream.</em>
   <br>
-</p>
+
 ---
-## 💡 Key Engineering Challenges & Technical Breakthroughs
+
+### 💡 Key Engineering Challenges & Technical Breakthroughs
 
 1. **Low-Weight, Cost-Effective Power Routing:** Solved the USB Host power limitation on boot without using heavy, expensive USB-C Power Delivery hubs by routing webcam power to a lightweight 5V 500mA Buck Converter and triggering USB Host mode via startup scripts.
 2. **Zephyr RTOS Kernel Hacks for PWM:** Overcame default 500Hz PWM constraints by hacking the underlying Zephyr RTOS layer to modify default output down to 350Hz, enabling precise ESC and servo synchronization.
