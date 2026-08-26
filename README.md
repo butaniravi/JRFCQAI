@@ -59,7 +59,7 @@ By leveraging the **Dual-Brain Architecture** of the UNO Q, this framework split
 | :--- | :--- | :--- |
 | Calibration Delay | 🔴&nbsp;&nbsp;&nbsp;🔴&nbsp;&nbsp;&nbsp;🔴&nbsp;&nbsp;&nbsp;🔴&nbsp;&nbsp;&nbsp;🔴&nbsp;&nbsp;&nbsp;🔴&nbsp;&nbsp;&nbsp;🔴 | Initial delay on boot (5 seconds) |
 | Gyro Calibration | 🔴🔴 🔴🔴 🔴🔴 🔴🔴 🔴🔴 | Calibrating gyroscope (8 seconds) |
-| ARM/DISARM |🔵 LED ON - ARMED &nbsp;⚪ LED OFF - DISARMED &nbsp;🔴 | BLUE LED - ARM Status |
+| ARM/DISARM |🔵 LED ON - ARMED &nbsp;⚪ LED OFF - DISARMED  | BLUE LED - ARM Status |
 | Flight Mode 1 | 🟢 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🟢 | Auto Level Mode active |
 | Flight Mode 2 | 🟢🟢 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🟢🟢 | Altitude Hold Mode active |
 | Flight Mode 3 | 🟢🟢🟢 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🟢🟢🟢 | Altitude & GPS Hold Mode active |
