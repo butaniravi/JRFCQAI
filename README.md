@@ -30,7 +30,7 @@ By leveraging the **Dual-Brain Architecture** of the UNO Q, this framework split
   <em>Figure 1: Complete wiring layout between Arduino UNO Q, sensors, and ESCs.</em>
   <br>
   <br>
-  <img src="Photos%20and%20diagrams/prop_dir.jpg" alt="JRFCQAI Motor Rotation Direction and UNOQ ESC PIN Mapping" width="700">
+  <img src="Photos%20and%20diagrams/prop_dir_v1.jpg" alt="JRFCQAI Motor Rotation Direction and UNOQ ESC PIN Mapping" width="700">
   <br>
   <em>Figure 2: Motor Rotation Direction and UNOQ ESC PIN Mapping.</em>
 </p>
