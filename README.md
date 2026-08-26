@@ -163,7 +163,6 @@ Watch the full build breakdown and flight demo on YouTube:
 ---
 
   <img src="Photos%20and%20diagrams/GCS.png" alt="JRFCQAI GCS Webpage" width="700">
-  <br>
   <em>Figure 3: JRFCQAI GCS Webpage hosted by UNO Q with Live AI Video stream.</em>
   <br>
 
