@@ -167,6 +167,7 @@ Watch the full build breakdown and flight demo on YouTube:
   <em>Figure 3: JRFCQAI GCS Webpage hosted by UNO Q with Live AI Video stream.</em>
   <br>
 </p>
+---
 ## 💡 Key Engineering Challenges & Technical Breakthroughs
 
 1. **Low-Weight, Cost-Effective Power Routing:** Solved the USB Host power limitation on boot without using heavy, expensive USB-C Power Delivery hubs by routing webcam power to a lightweight 5V 500mA Buck Converter and triggering USB Host mode via startup scripts.
