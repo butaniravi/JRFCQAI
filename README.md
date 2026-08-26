@@ -17,7 +17,7 @@ While most projects utilizing the newly launched **Arduino UNO Q** explore basic
 
 By leveraging the **Dual-Brain Architecture** of the UNO Q, this framework splits time-critical flight stabilization and high-level Edge AI processing across two dedicated processors on a single PCB:
 
-1. **STM32U585 Microcontroller (MCU):** Runs a deterministic, 250Hz PID loop over Zephyr RTOS for real-time sensor fusion, motor control, and flight stabilization.
+1. **STM32U585 Microcontroller (MCU):** Runs a deterministic, 250Hz PID loop (Tested up to 500Hz) over Zephyr RTOS for real-time sensor fusion, motor control, and flight stabilization, all flight stabilization routines completes under 1ms and enough time in loop available to execute mission specific user functions.
 2. **Qualcomm® Dragonwing™ MPU:** Runs Debian Linux, processing live USB webcam video via YOLO Light Object Detection inside an Arduino App Lab environment. It acts as a local Web Ground Station streaming live telemetry, AI detections, and direct UI controls to any browser on the local Wi-Fi network.
 
 ---
@@ -38,6 +38,7 @@ By leveraging the **Dual-Brain Architecture** of the UNO Q, this framework split
   * **MPU6050:** 6-DOF Gyroscope / Accelerometer
   * **MS5611:** Barometric Pressure / Altitude sensor
   * **HMC5883:** 3-Axis Magnetometer / Compass
+  * **AT24C256:** 32KB I2C EEPROM to hold PID and IMU Compass Baro calibration data
 * **GPS & Receiver:**
   * **u-blox NEO-M8N GPS:** Connected via UART3 (115200 baud)
   * **Flysky FS-iA6B 10CH Receiver:** iBus interface on UART1 (115200 baud)
