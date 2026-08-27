@@ -188,9 +188,12 @@ Watch the full build breakdown and flight demo on YouTube:
 - [x] Failsafe System *(RTH on GPS signal / Slow descent altitude hold on signal loss - Tested)*
 - [x] Real-Time YOLO Object Detection AI *(Tested)*
 - [x] Browser-Based Ground Station & Live Video Feed *(Tested)*
-- [ ] Return to Home (RTH) Execution *(Implemented, pending field test)*
-- [ ] Autonomous Waypoint Navigation *(Implemented, pending field test)*
-- [ ] Framework expansion for Hexcopter & Fixed-Wing platforms
+- [x] Return to Home (RTH) Execution *(Tested)*
+- [x] Autonomous Waypoint Navigation *(Implemented, pending field test - waypoint travel speed ramp up/ramp down tuning under progress)*
+- [ ] Autonomous Flight and task execution based on Edge Impulse AI brick execution results *(Under progress)*
+- [ ] Design and fabricate custom PCB compatible with **Arduino UNO Q** and **Arduino VENTUNO Q** *(Under progress)*
+- [ ] Add SIMCOM A76XX 4G LTE support via USB RNDIS/CDC ECM for GCS Dashboard and live streaming *(RNDIS driver not precompiled with UNO Q kernel so focusing on CDC ECM - under progress)*
+- [ ] Framework expansion for Hexcopter & Fixed-Wing platforms *(Under progress)*
 
 ---
 
@@ -202,7 +205,7 @@ JRFCQAI is released as a fully open-source framework—including hardware schema
 
 ## 🙏 Credits & Acknowledgments
 
-Special thanks and full attribution to **Joop Broking**, creator of the original **YMFC-32 Autonomous Flight Controller**. His pioneering open-source work provided the fundamental mathematical foundation for the flight stabilization algorithms ported into this project.
+Special thanks and full attribution to **[Joop Broking]([http://www.brokking.net/ymfc-32_auto_main.html](https://www.youtube.com/playlist?list=PL0K4VDicBzshwCpUHzIB6hOLQVkDFHbxC))**, creator of the original **[YMFC-32 Autonomous Flight Controller](http://www.brokking.net/ymfc-32_auto_main.html)**. His pioneering open-source work provided the fundamental mathematical foundation for the flight stabilization algorithms ported into this project.
 
 ---
 
