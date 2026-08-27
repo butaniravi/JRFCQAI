@@ -205,7 +205,7 @@ JRFCQAI is released as a fully open-source framework—including hardware schema
 
 ## 🙏 Credits & Acknowledgments
 
-Special thanks and full attribution to **[Joop Broking]([http://www.brokking.net/ymfc-32_auto_main.html](https://www.youtube.com/playlist?list=PL0K4VDicBzshwCpUHzIB6hOLQVkDFHbxC))**, creator of the original **[YMFC-32 Autonomous Flight Controller](http://www.brokking.net/ymfc-32_auto_main.html)**. His pioneering open-source work provided the fundamental mathematical foundation for the flight stabilization algorithms ported into this project.
+Special thanks and full attribution to **[Joop Broking](https://www.youtube.com/playlist?list=PL0K4VDicBzshwCpUHzIB6hOLQVkDFHbxC)**, creator of the original **[YMFC-32 Autonomous Flight Controller](http://www.brokking.net/ymfc-32_auto_main.html)**. His pioneering open-source work provided the fundamental mathematical foundation for the flight stabilization algorithms ported into this project.
 
 ---
 
