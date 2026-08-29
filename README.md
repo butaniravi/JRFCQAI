@@ -104,7 +104,7 @@ Watch the full build breakdown and flight demo on YouTube:
 <a href="https://www.youtube.com/watch?v=u1FR_EWiBVY&list=PLfxRMvKGemR4" target="_blank">
   <img src="https://raw.githubusercontent.com/github/explore/main/topics/youtube/youtube.png" width="32" alt="YouTube" align="center">
 </a> **[JRFCQAI Video Playlist](https://www.youtube.com/watch?v=u1FR_EWiBVY&list=PLfxRMvKGemR4)**
-<video src="https://www.youtube.com/watch?v=u1FR_EWiBVY" controls width="100%"></video>
+
 ---
 
 ## 💻 Quick Start & Software Setup
