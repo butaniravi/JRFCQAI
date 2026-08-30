@@ -22,6 +22,13 @@ By leveraging the **Dual-Brain Architecture** of the UNO Q, this framework split
 
 ---
 
+## 📹 Media & Video Demonstration
+Watch the full build breakdown and flight demo on YouTube:  
+<a href="https://www.youtube.com/watch?v=u1FR_EWiBVY&list=PLfxRMvKGemR4" target="_blank">
+  <img src="https://raw.githubusercontent.com/github/explore/main/topics/youtube/youtube.png" width="32" alt="YouTube" align="center">
+</a> **[JRFCQAI Video Playlist](https://www.youtube.com/watch?v=u1FR_EWiBVY&list=PLfxRMvKGemR4)**
+
+---
 ## 🛠️ Hardware Architecture & Sensor Interfaces
 
 <p align="center">
@@ -99,13 +106,6 @@ By leveraging the **Dual-Brain Architecture** of the UNO Q, this framework split
 
 ---
 
-## 📹 Media & Video Demonstration
-Watch the full build breakdown and flight demo on YouTube:  
-<a href="https://www.youtube.com/watch?v=u1FR_EWiBVY&list=PLfxRMvKGemR4" target="_blank">
-  <img src="https://raw.githubusercontent.com/github/explore/main/topics/youtube/youtube.png" width="32" alt="YouTube" align="center">
-</a> **[JRFCQAI Video Playlist](https://www.youtube.com/watch?v=u1FR_EWiBVY&list=PLfxRMvKGemR4)**
-
----
 
 ## 💻 Quick Start & Software Setup
 
