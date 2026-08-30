@@ -116,7 +116,7 @@ Watch the full build breakdown and flight demo on YouTube:
 
    * **Modify Hardware PWM Frequency:**  
      Open `wiring_analog.cpp` located at:  
-     `C:\Users\xxx\AppData\Local\Arduino15\packages\arduino\hardware\zephyr\0.56.0\cores\arduino\wiring_analog.cpp`  
+     `C:\Users\xxx\AppData\Local\Arduino15\packages\arduino\hardware\zephyr\0.90.0\cores\arduino\wiring_analog.cpp`  
      Locate around line 141 and update the implementation to set a custom period:
      ```cpp
      value = CLAMP(value, 0, maxInput);
