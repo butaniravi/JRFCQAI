@@ -1,4 +1,4 @@
-# 🚀 JRFCQAI: Dual-Brain Physical AI Flight Controller & Ground Station Developed on Arduino UNO Q
+# 🚀 JRFCQAI: Dual-Brain Physical AI Fight Computer, Flight Controller & Ground Station all Developed on Arduino UNO Q
 
 [![Track: Robotics & Interactive AI](https://img.shields.io/badge/Track-Robotics%20%26%20Interactive%20AI-blue)](https://github.com)
 [![Board: Arduino UNO Q](https://img.shields.io/badge/Board-Arduino%20UNO%20Q-teal)](https://github.com)
