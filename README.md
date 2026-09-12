@@ -5,7 +5,7 @@
 [![Status: Open Source](https://img.shields.io/badge/Status-Open--Source-brightgreen)](https://github.com)
 
 **Developer:** Ravi Butani  
-**Track:** Robotics & Interactive AI  
+**Track:** Robotics & Autonomous UAV  
 **Board:** Arduino UNO Q (Qualcomm® Dragonwing™ QRB2210 + STM32U585)  
 **Project Status:** Open-Source Software & Hardware Framework  
 
