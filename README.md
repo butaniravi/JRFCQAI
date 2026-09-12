@@ -189,8 +189,8 @@ Watch the full build breakdown and flight demo on YouTube:
 - [x] Real-Time YOLO Object Detection AI *(Tested)*
 - [x] Browser-Based Ground Station & Live Video Feed *(Tested)*
 - [x] Return to Home (RTH) Execution *(Tested)*
-- [x] Autonomous Waypoint Navigation *(Implemented, pending field test - waypoint travel speed ramp up/ramp down tuning under progress)*
-- [ ] Autonomous Flight and task execution based on Edge Impulse AI brick execution results *(Under progress)*
+- [x] Autonomous Waypoint Navigation *(Tested fine tuning under progress)*
+- [x] Autonomous Flight and task execution based on Edge Impulse AI brick execution results *(Tested)*
 - [ ] Design and fabricate custom PCB compatible with **Arduino UNO Q** and **Arduino VENTUNO Q** *(Under progress)*
 - [ ] Add SIMCOM A76XX 4G LTE support via USB RNDIS/CDC ECM for GCS Dashboard and live streaming *(RNDIS driver not precompiled with UNO Q kernel so focusing on CDC ECM - under progress)*
 - [ ] Framework expansion for Hexcopter & Fixed-Wing platforms *(Under progress)*
