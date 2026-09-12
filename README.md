@@ -52,7 +52,7 @@ Watch the full build breakdown and flight demo on YouTube:
   * **u-blox NEO-M8N GPS:** Connected via UART3 (115200 baud)
   * **Flysky FS-iA6B 10CH Receiver:** iBus interface on UART1 (115200 baud)
 * **Actuators & Monitoring:**
-  * **4x BLDC ESCs >30 Amp:** Driven at 350Hz on Hardware PWM Pins (`D3`, `D5`, `D6`, `D9`)
+  * **4x BLDC ESCs >30 Amp:** Driven at 400Hz on Hardware PWM Pins (`D3`, `D5`, `D6`, `D9`)
   * **Frame:** S500 Quadcopter frame is used in this project for other frame and ESC/BLDC combo please tune default PIDs
   * **Battery Telemetry:** Voltage monitoring on Pin `A0` via a 10K/1K resistor voltage divider
   * **Status Indicators:** RGB Status LEDs on `D11`, `D12`, `D13`
@@ -112,7 +112,7 @@ Watch the full build breakdown and flight demo on YouTube:
 ### 1. Flight Controller Firmware (MCU) & Core Patches
 1. Open `UNOQ_JRFCQAI_MAIN` in the **Arduino IDE**.
 2. Select your **Arduino UNO Q** board target.
-3. **Apply Zephyr RTOS Core Patches (Required for 350Hz PWM & GPS Parsing):**
+3. **Apply Zephyr RTOS Core Patches (Required for 400Hz PWM & GPS Parsing):**
 
    * **Modify Hardware PWM Frequency:**  
      Open `wiring_analog.cpp` located at:  
@@ -171,7 +171,7 @@ Watch the full build breakdown and flight demo on YouTube:
 ### 💡 Key Engineering Challenges & Technical Breakthroughs
 
 1. **Low-Weight, Cost-Effective Power Routing:** Solved the USB Host power limitation on boot without using heavy, expensive USB-C Power Delivery hubs by routing webcam power to a lightweight 5V 500mA Buck Converter and triggering USB Host mode via startup scripts.
-2. **Zephyr RTOS Kernel Hacks for PWM:** Overcame default 500Hz PWM constraints by hacking the underlying Zephyr RTOS layer to modify default output down to 350Hz, enabling precise ESC and servo synchronization.
+2. **Zephyr RTOS Kernel Hacks for PWM:** Overcame default 500Hz PWM constraints by hacking the underlying Zephyr RTOS layer to modify default output down to 400Hz, enabling precise ESC and servo synchronization.
 3. **Serial Buffer Expansion for GPS Data:** Prevented packet loss on the standard 64-byte UART buffer by patching Zephyr RTOS to allocate a 512-byte UART RX buffer for loss-free u-blox GPS parsing.
 4. **Optimized 250Hz PID Execution Loop:** Implemented `k_yield()` and `k_sleepus()` inside the main flight loop to guarantee a fixed 4ms (250Hz) execution cycle with ~3ms of spare processing headroom per loop.
 5. **Zero-Blocking RPC Bridge Communication:** Replaced blocking `bridge.call()` calls (which introduce 5–7ms delays in flight loop timing) with asynchronous `bridge.notify()` fire-and-forget RPC calls for non-blocking telemetry sync between the STM32 flight core and Qualcomm Linux host.
