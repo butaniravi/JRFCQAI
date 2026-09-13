@@ -16,7 +16,7 @@
   <br>
   <img src="Photos%20and%20diagrams/jrfcqai_title.png" alt="JRFCQAI Project Title Image" width="700">
   <br>
-  <em>Figure 2: Motor Rotation Direction and UNOQ ESC PIN Mapping.</em>
+  <em>Figure : JRFCQAI Project Title Image.</em>
 </p>
 While most projects utilizing the newly launched **Arduino UNO Q** explore basic ground robotics, **JRFCQAI** pushes the platform to its limits: transforming a single alpha-stage UNO Q board into a full-fledged **Flight Computer + Flight Controller** combo for autonomous UAVs.
 
