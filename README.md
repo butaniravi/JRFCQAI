@@ -12,7 +12,12 @@
 ---
 
 ## 📌 Project Overview
-
+<p align="center">
+  <br>
+  <img src="Photos%20and%20diagrams/jrfcqai_title.png" alt="JRFCQAI Project Title Image" width="700">
+  <br>
+  <em>Figure 2: Motor Rotation Direction and UNOQ ESC PIN Mapping.</em>
+</p>
 While most projects utilizing the newly launched **Arduino UNO Q** explore basic ground robotics, **JRFCQAI** pushes the platform to its limits: transforming a single alpha-stage UNO Q board into a full-fledged **Flight Computer + Flight Controller** combo for autonomous UAVs.
 
 By leveraging the **Dual-Brain Architecture** of the UNO Q, this framework splits time-critical flight stabilization and high-level Edge AI processing across two dedicated processors on a single PCB:
@@ -162,7 +167,7 @@ Watch the full build breakdown and flight demo on YouTube:
 
 ---
 
-  <img src="Photos%20and%20diagrams/GCS.png" alt="JRFCQAI GCS Webpage" width="700">
+  <img src="Photos%20and%20diagrams/connection_jrfcqai_v1.png" alt="JRFCQAI Hardware Wiring Diagram" width="700">
   <em>Figure 3: JRFCQAI GCS Webpage hosted by UNO Q with Live AI Video stream.</em>
   <br>
 
