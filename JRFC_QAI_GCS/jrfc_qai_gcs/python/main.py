@@ -1,4 +1,5 @@
-# SPDX-License-Identifier: MPL-2.0
+# JRFCQAI GCS PYTHON CODE for WEB GCS utility
+from collections import deque
 import math
 import struct
 import threading
@@ -10,9 +11,11 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel
 import uvicorn
 
+from arduino.app_peripherals.camera import Camera
 from arduino.app_bricks.video_objectdetection import VideoObjectDetection
 from arduino.app_utils import *
 
+time.sleep(12)
 # ==============================================================================
 # FASTAPI INSTANCE & REQUEST MODELS
 # ==============================================================================
@@ -32,13 +35,43 @@ class CommandButtonRequest(BaseModel):
     btn_id: str
 
 
+class AIFlightToggleRequest(BaseModel):
+    enabled: bool
+
+
 # ==============================================================================
-# OBJECT DETECTION & VIDEO STREAM SETUP
+# COMMAND BUTTON MESSAGES MAP
 # ==============================================================================
-video_detector = VideoObjectDetection(confidence=0.4, debounce_sec=0.0)
+BUTTON_MESSAGES = {
+    "ET.....": "🛫 Executing Auto Takeoff Sequence",
+    "TF.....": "🔼 Moving Forward",
+    "EU.....": "🔺 Increasing Altitude",
+    "TL.....": "◀️ Rolling Left",
+    "EH.....": "⚓ Holding Position",
+    "TR.....": "▶️ Rolling Right",
+    "EL.....": "🛬 Executing Auto Landing Sequence",
+    "TB.....": "🔽 Moving Backward",
+    "ED.....": "🔻 Decreasing Altitude",
+    "EX.....": "⚙️ Auxiliary Switch 1 Activated",
+    "EY.....": "⚙️ Auxiliary Switch 2 Activated",
+    "EZ.....": "⚙️ Auxiliary Switch 3 Activated",
+}
+
+
+# ==============================================================================
+# OBJECT DETECTION, AI FLIGHT STATE & DEBUG CONSOLE LOGGING
+# ==============================================================================
+camera = Camera(resolution=(640, 480), fps=5)
+video_detector = VideoObjectDetection(camera=camera, confidence=0.5, debounce_sec=3.0)
 
 LAST_DETECTION_TIME = 0.0
-DETECTION_INTERVAL = 0.2  # Max 5 checks per second
+DETECTION_INTERVAL = 2  # Max 5 checks per second
+
+# Toggle state for AI Flight mode
+AI_FLIGHT_ENABLED = False
+
+# Ring buffer to store the last 50 detection log strings
+DETECTION_LOGS = deque(maxlen=50)
 
 
 def send_detections_to_console(detections: dict):
@@ -51,15 +84,35 @@ def send_detections_to_console(detections: dict):
 
     if detections:
         summary = []
+        has_person = False
+
         for label, instances in detections.items():
+            if label.lower() == "person" and len(instances) > 0:
+                has_person = True
+
             for item in instances:
                 conf = item.get("confidence", 0.0)
+                box = item.get("bounding_box_xyxy")
+                if box:
+                    xmin, ymin, xmax, ymax = box
+                    cx = int((xmin + xmax) / 2)
+                    cy = int((ymin + ymax) / 2)
+                else:
+                    cx, cy = 0, 0
+                print("Center coordinates:", cx, cy)
                 summary.append(f"{label} ({int(conf * 100)}%)")
 
         if summary:
-            print(
-                f"🎯 Detections [{datetime.now(UTC).strftime('%H:%M:%S')}]: {', '.join(summary)}"
-            )
+            log_entry = f"🎯 Detections : {', '.join(summary)}"
+            print(log_entry)
+            DETECTION_LOGS.append(log_entry)
+
+        # AI Flight feature logic
+        if AI_FLIGHT_ENABLED and has_person:
+            msg = "AI Flight Active: Sending Drone MOVE UP Command "
+            print(msg)
+            DETECTION_LOGS.append(msg)
+            send_command_button_packet("EU.....")
 
 
 video_detector.on_detect_all(send_detections_to_console)
@@ -188,9 +241,9 @@ def stm_tx_tel(raw_bytes: bytes):
     TELEMETRY_STATE["error"] = ERRORS.get(err_code, f"Err {err_code}")
     TELEMETRY_STATE["flight_mode"] = FLIGHT_MODES.get(mode_code, f"Mode {mode_code}")
     TELEMETRY_STATE["flight_mode_code"] = mode_code
-    TELEMETRY_STATE["battery_voltage"] = round(vbat_raw / 10.0, 1)
+    TELEMETRY_STATE["battery_voltage"] = round(vbat_raw / 10.0, 2)
     TELEMETRY_STATE["battery_bar_level"] = vbat_raw
-    TELEMETRY_STATE["temperature"] = round(temp_raw / 100.0, 1)
+    TELEMETRY_STATE["temperature"] = round(temp_raw / 340.0 + 36.5, 1)
     TELEMETRY_STATE["roll"] = roll_raw - 100
     TELEMETRY_STATE["pitch"] = pitch_raw - 100
     TELEMETRY_STATE["start"] = start_val
@@ -211,7 +264,7 @@ def stm_tx_tel(raw_bytes: bytes):
     TELEMETRY_STATE["setting_2"] = float(s2_raw)
     TELEMETRY_STATE["setting_3"] = float(s3_raw)
     TELEMETRY_STATE["setting_4"] = float(s4_raw)
-    TELEMETRY_STATE["setting_5"] = float(s5_raw)
+    TELEMETRY_STATE["setting_5"] = round(s5_raw / 8.5, 2)
     TELEMETRY_STATE["setting_6"] = float(s6_raw)
     TELEMETRY_STATE["last_update"] = time.time()
 
@@ -257,18 +310,17 @@ def send_waypoint_packet(lat: float, lng: float):
 
 def send_command_button_packet(btn_id: str):
     """Packs 12-byte binary command packet starting with 'CMD' and transmits over Bridge."""
-    btn_str = btn_id.upper().ljust(7)[:7].encode("ascii")
+    btn_bytes = btn_id.upper().ljust(7)[:7].encode("ascii")
 
-    buffer = bytearray(
-        struct.pack("<3s7c1s1s", b"CMD", *[bytes([b]) for b in btn_str], b"\x00", b"-")
-    )
+    send_buffer = bytearray(struct.pack("<3s7s1s", b"CMD", btn_bytes, b"-"))
 
     check_byte = 0
-    for b in buffer[:10]:
+    for b in send_buffer:
         check_byte ^= b
 
-    buffer[10] = check_byte
-    Bridge.notify("stm_rx_tel", bytes(buffer))
+    send_buffer.append(check_byte)
+
+    Bridge.notify("stm_rx_tel", bytes(send_buffer))
 
 
 # ==============================================================================
@@ -340,7 +392,20 @@ def get_telemetry():
     response = dict(TELEMETRY_STATE)
     response["wp_active"] = waypoint_active
     response["wp_status_msg"] = waypoint_status_msg
+    response["detection_logs"] = list(DETECTION_LOGS)
+    response["ai_flight_enabled"] = AI_FLIGHT_ENABLED
     return JSONResponse(content=response)
+
+
+@app.post("/api/ai_flight")
+def toggle_ai_flight(req: AIFlightToggleRequest):
+    global AI_FLIGHT_ENABLED
+    AI_FLIGHT_ENABLED = req.enabled
+    status_str = "ENABLED" if AI_FLIGHT_ENABLED else "DISABLED"
+    msg = f"🤖 AI Flight Mode {status_str}"
+    DETECTION_LOGS.append(msg)
+    print(msg)
+    return {"status": "success", "ai_flight_enabled": AI_FLIGHT_ENABLED}
 
 
 @app.post("/api/waypoint/start")
@@ -380,7 +445,14 @@ def stop_route():
 @app.post("/api/command")
 def execute_command(req: CommandButtonRequest):
     send_command_button_packet(req.btn_id)
-    print("btn pressed")
+
+    # Retrieve mapped button message or use default format
+    msg = BUTTON_MESSAGES.get(req.btn_id, f"Button {req.btn_id} Pressed")
+
+    # Append raw message directly to DETECTION_LOGS ring buffer
+    DETECTION_LOGS.append(msg)
+
+    print("Command Sent:", req.btn_id, "| Console Log:", msg)
     return {"status": "success", "command_sent": req.btn_id}
 
 
@@ -392,7 +464,7 @@ def web_interface():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>JRFC AI-Q Ground Control Station</title>
+        <title>JRFCQAI Ground Control Station</title>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <style>
@@ -432,6 +504,8 @@ def web_interface():
 
             .card { background: #2f2f2f; border-radius: 6px; padding: 10px; border: 1px solid #3d3d3d; }
             .card h3 { font-size: 16px; color: #00bcd4; margin-bottom: 6px; border-bottom: 1px solid #444; padding-bottom: 4px; text-transform: uppercase; }
+            .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; border-bottom: 1px solid #444; padding-bottom: 4px; }
+            .card-header-flex h3 { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
             .row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 14px; }
             .val { font-weight: bold; color: #4caf50; }
             
@@ -440,6 +514,26 @@ def web_interface():
             button.btn-action:hover { background: #e68a00; }
             button.btn-danger { background: #f44336; color: white; }
             button.btn-danger:hover { background: #d32f2f; }
+
+            /* Toggle Switch Styling */
+            .toggle-btn {
+                width: auto;
+                padding: 5px 12px;
+                font-size: 12px;
+                border-radius: 14px;
+                background: #555;
+                color: #fff;
+                border: 1px solid #777;
+                cursor: pointer;
+                transition: 0.3s;
+                text-transform: uppercase;
+            }
+            .toggle-btn.active {
+                background: #00ff88;
+                color: #000;
+                border-color: #00ff88;
+                box-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+            }
 
             .battery-bar { height: 10px; background: #444; border-radius: 4px; overflow: hidden; margin-top: 4px; }
             .battery-fill { height: 100%; width: 0%; background: #4caf50; transition: width 0.3s; }
@@ -474,22 +568,42 @@ def web_interface():
 
             /* Command Matrix (3x4) */
             .grid-3x4 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-            .btn-cmd { background: #3a3a4a; color: #00ff88; border: 1px solid #00ff88; padding: 13px 0; font-size: 13px; font-weight: bold; border-radius: 4px; cursor: pointer; text-align: center; }
+            .btn-cmd { background: #3a3a4a; color: #00ff88; border: 1px solid #00ff88; padding: 4px 0; font-size: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; text-align: center; }
             .btn-cmd:hover { background: #00ff88; color: #000; }
             .btn-cmd:active { transform: scale(0.95); }
+
+            /* Debug Console Output Styling */
+            .debug-console {
+                background: #111;
+                color: #00ff88;
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 14px;
+                padding: 8px;
+                border-radius: 4px;
+                border: 1px solid #333;
+                height: 90px;
+                overflow-y: auto;
+                white-space: pre-wrap;
+                line-height: 1.3;
+            }
 
             /* Footer Card Styling */
             .info-card { background: #252525; padding: 8px 10px; font-size: 13px; color: #aaa; line-height: 1.4; border: 1px solid #333; }
             .info-card p { margin-bottom: 3px; }
             .info-card a { color: #00bcd4; text-decoration: none; }
             .info-card a:hover { text-decoration: underline; }
+
+            /* Drone Heading Arrow Icon Styling */
+            .drone-arrow-icon {
+                transition: transform 0.3s ease-in-out;
+            }
         </style>
     </head>
     <body>
         <!-- COLUMN 1: SYSTEM STATUS & TELEMETRY (25% WIDTH) -->
         <div class="column-left">
             <h2 style="margin-bottom: 6px; font-family: 'Segoe UI', sans-serif; line-height: 1.3;">
-                <span style="font-size: 40px; color: #00ff88; font-weight: bold; display: block;">JRFC AI-Q GCS</span>
+                <span style="font-size: 40px; color: #00ff88; font-weight: bold; display: block;">JRFCQAI GCS</span>
                 <span style="font-size: 25px; color: #00bcd4; font-weight: 600; display: block; margin-bottom: 8px;">Arduino UNO Q based AI UAV</span>
                 <span style="font-size: 20px; color: #ffb74d; font-weight: 400; display: block;"> By - Ravi Butani (not PhD)</span>
                 <span style="font-size: 20px; color: #ffb74d; font-weight: 400; display: block; margin-bottom: 4px;"> Credits - Joop Brokking</span>
@@ -516,19 +630,19 @@ def web_interface():
             </div>
 
             <div class="card">
-                <h3>Settings Variables</h3>
+                <h3>Watch Key Variables</h3>
                 <div class="settings-grid">
-                    <div>S1: <span id="setting_1" class="val">0</span></div>
-                    <div>S2: <span id="setting_2" class="val">0</span></div>
-                    <div>S3: <span id="setting_3" class="val">0</span></div>
-                    <div>S4: <span id="setting_4" class="val">0</span></div>
-                    <div>S5: <span id="setting_5" class="val">0</span></div>
-                    <div>S6: <span id="setting_6" class="val">0</span></div>
+                    <div>V1-CH1: <span id="setting_1" class="val">0</span></div>
+                    <div>V2-CH2: <span id="setting_2" class="val">0</span></div>
+                    <div>V3-CH3: <span id="setting_3" class="val">0</span></div>
+                    <div>V4-CH4: <span id="setting_4" class="val">0</span></div>
+                    <div>V5-ALTSP: <span id="setting_5" class="val">0.0</span></div>
+                    <div>V6: <span id="setting_6" class="val">0</span></div>
                 </div>
             </div>
         </div>
 
-        <!-- COLUMN 2: CAMERA & COMMAND BUTTONS (35% WIDTH) -->
+        <!-- COLUMN 2: CAMERA, COMMAND BUTTONS & DEBUG CONSOLE (35% WIDTH) -->
         <div class="column-center">
             <div class="card">
                 <h3>Live UNO Q Stream</h3>
@@ -538,8 +652,16 @@ def web_interface():
             </div>
 
             <div class="card">
-                <h3>Command Buttons</h3>
+                <div class="card-header-flex">
+                    <h3>Command Buttons</h3>
+                    <button id="aiFlightToggle" class="toggle-btn" onclick="toggleAIFlight()">AI Flight: OFF</button>
+                </div>
                 <div class="grid-3x4" id="cmdGrid"></div>
+            </div>
+
+            <div class="card">
+                <h3>Debug Console</h3>
+                <div class="debug-console" id="debugConsole">Waiting for detections...</div>
             </div>
         </div>
 
@@ -562,25 +684,48 @@ def web_interface():
                 </div>
             </div>
 
-            <!-- Copyright & Info Card -->
-            <div class="card info-card">
-                <p><strong>JRFC AI-Q Arduino UNO Q based AI UAV STACK</strong></br><strong>PHILOSOPHY & LICENSE:</strong> COMPLETELY UNLICENSED AND FREE FOR ALL HUMAN KNOWLEDGE</br>No guarantees or warranties are provided. Use at your own risk.</p>
-                <p><strong>Developed By:</strong> Ravi Butani | <strong>Credits:</strong> Inspired by and dedicated to Joop Brokking (YMFC Project)</p>
-                <p><strong>Support & Contact:</strong> <a href="mailto:ravi.butani03@gmail.com">ravi.butani03@gmail.com</a> | Revision- 1.0.2</p>
-            </div>
+        <!-- Copyright & Info Card -->
+        <div class="card info-card">
+            <p>
+                <strong>JRFCQAI Arduino UNO Q based AI UAV STACK</strong><br>
+                <strong>PHILOSOPHY & LICENSE:</strong> PUBLIC DOMAIN / UNLICENSE — Free for all human knowledge.<br>
+                Provided "as is" without warranty of any kind. Use at your own risk.
+            </p>
+            <p><strong>Developed By:</strong> Ravi Butani | <strong>Credits:</strong> Inspired by and dedicated to Joop Brokking (<a href="http://www.brokking.net/" target="_blank">YMFC Project</a>)</p>
+            <p><strong>Support & Contact:</strong> <a href="mailto:ravi.butani03@gmail.com">ravi.butani03@gmail.com</a> | Revision 1.0.2</p>
+        </div>
         </div>
 
         <script>
+            let aiFlightActive = false;
+
             window.addEventListener('DOMContentLoaded', () => {
                 const iframe = document.getElementById('dynamicIframe');
                 iframe.src = `http://${window.location.hostname}:4912/embed`;
 
+                const btnLabels = [
+                    "🛫 TAKEOFF", "🔼 FRONT", "🔺 UP",
+                    "◀️ LEFT",    "⚓ HOLD",  "▶️ RIGHT",
+                    "🛬 LAND",    "🔽 BACK",  "🔻 DOWN",
+                    "⚙️ AUX1",    "⚙️ AUX2",  "⚙️ AUX3"
+                ];
+                
+                const btnCommands = [
+                    "ET.....",  "TF.....", "EU.....", 
+                    "TL.....",  "EH.....", "TR.....", 
+                    "EL.....",  "TB.....", "ED.....", 
+                    "EX.....",  "EY.....", "EZ....."
+                ];
+                
                 const cmdGrid = document.getElementById('cmdGrid');
-                for (let i = 1; i <= 12; i++) {
+                for (let i = 0; i < 12; i++) {
                     const btn = document.createElement('button');
                     btn.className = 'btn-cmd';
-                    btn.innerText = `BTN${i}`;
-                    btn.onclick = () => triggerButtonCommand(`BTN${i}`);
+                    btn.innerText = btnLabels[i] || `BTN${i + 1}`;
+                    
+                    const cmdToSend = btnCommands[i] || `BTN${i + 1}`;
+                    btn.onclick = () => triggerButtonCommand(cmdToSend);
+                    
                     cmdGrid.appendChild(btn);
                 }
             });
@@ -593,21 +738,47 @@ def web_interface():
                 });
             }
 
-            let map = L.map('map').setView([23.259021795549522, 72.65170727804829], 18);
+            async function toggleAIFlight() {
+                aiFlightActive = !aiFlightActive;
+                await fetch('/api/ai_flight', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ enabled: aiFlightActive })
+                });
+
+                const btn = document.getElementById('aiFlightToggle');
+                if (aiFlightActive) {
+                    btn.innerText = "AI Flight: ON";
+                    btn.classList.add('active');
+                } else {
+                    btn.innerText = "AI Flight: OFF";
+                    btn.classList.remove('active');
+                }
+            }
+
+            let map = L.map('map').setView([23.259021795549522, 72.65170727804829], 20);
             L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 maxNativeZoom: 19,
                 maxZoom: 22,
                 attribution: 'Esri World Imagery'
             }).addTo(map);
 
-            let droneIcon = L.icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
-            });
+            // Function to generate rotated SVG arrow Icon for the drone
+            function createDroneArrowIcon(headingAngle = 0) {
+                const svgString = `
+                    <svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(${headingAngle}deg); transform-origin: center center; filter: drop-shadow(0px 0px 4px rgba(0,0,0,0.8));">
+                        <polygon points="18,2 32,32 18,24 4,32" fill="#ff3333" stroke="#ffffff" stroke-width="2.5" stroke-linejoin="round"/>
+                        <circle cx="18" cy="18" r="3" fill="#ffffff"/>
+                    </svg>
+                `;
+                return L.divIcon({
+                    html: svgString,
+                    className: 'drone-arrow-icon',
+                    iconSize: [36, 36],
+                    iconAnchor: [18, 18],
+                    popupAnchor: [0, -18]
+                });
+            }
 
             let homeIcon = L.icon({
                 iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
@@ -618,7 +789,7 @@ def web_interface():
                 shadowSize: [41, 41]
             });
 
-            let droneMarker = L.marker([23.259021795549522, 72.65170727804829], { icon: droneIcon })
+            let droneMarker = L.marker([23.259021795549522, 72.65170727804829], { icon: createDroneArrowIcon(0) })
                 .addTo(map)
                 .bindPopup("<b>Drone Position</b>");
 
@@ -677,7 +848,7 @@ def web_interface():
 
                     document.getElementById('status').innerText = t.status;
                     document.getElementById('flight_mode').innerText = t.flight_mode;
-                    document.getElementById('start_flag').innerText = t.start;
+                    document.getElementById('start_flag').innerText = (t.start === 2) ? "Armed" : "Disarmed";
                     document.getElementById('error').innerText = t.error;
                     document.getElementById('satellites').innerText = t.satellites;
                     document.getElementById('battery_voltage').innerText = t.battery_voltage + " V";
@@ -692,17 +863,42 @@ def web_interface():
                     document.getElementById('setting_2').innerText = t.setting_2;
                     document.getElementById('setting_3').innerText = t.setting_3;
                     document.getElementById('setting_4').innerText = t.setting_4;
-                    document.getElementById('setting_5').innerText = t.setting_5;
+                    document.getElementById('setting_5').innerText = t.setting_5.toFixed(2) + " m";
                     document.getElementById('setting_6').innerText = t.setting_6;
 
                     document.getElementById('wp_status_msg').innerText = t.wp_status_msg;
 
+                    // Sync UI toggle button state with server
+                    if (t.ai_flight_enabled !== undefined && t.ai_flight_enabled !== aiFlightActive) {
+                        aiFlightActive = t.ai_flight_enabled;
+                        const btn = document.getElementById('aiFlightToggle');
+                        if (aiFlightActive) {
+                            btn.innerText = "AI Flight: ON";
+                            btn.classList.add('active');
+                        } else {
+                            btn.innerText = "AI Flight: OFF";
+                            btn.classList.remove('active');
+                        }
+                    }
+
                     let batPct = Math.max(0, Math.min(100, (t.battery_bar_level - 85) * 2.5));
                     document.getElementById('battery_fill').style.width = batPct + "%";
+
+                    if (t.detection_logs && t.detection_logs.length > 0) {
+                        const consoleElem = document.getElementById('debugConsole');
+                        consoleElem.innerText = t.detection_logs.join('\\n');
+                        consoleElem.scrollTop = consoleElem.scrollHeight;
+                    }
 
                     if (t.drone_lat !== 0 && t.drone_lng !== 0) {
                         droneMarker.setLatLng([t.drone_lat, t.drone_lng]);
                     }
+
+                    // Dynamically update arrow orientation according to drone heading angle
+                    let droneHeading = t.heading || 0;
+                    //droneMarker.setIcon(createDroneArrowIcon(droneHeading));
+                    // ADD THIS LINE INSTEAD:
+                    if (droneMarker._icon) droneMarker._icon.firstElementChild.style.transform = `rotate(${droneHeading}deg)`;
 
                     if (t.home_set && t.home_lat !== 0 && t.home_lng !== 0) {
                         if (!homeMarker) {
@@ -723,6 +919,7 @@ def web_interface():
     </html>
     """
     return HTMLResponse(content=html_content)
+
 
 # ==============================================================================
 # MAIN APPLICATION LOOP
