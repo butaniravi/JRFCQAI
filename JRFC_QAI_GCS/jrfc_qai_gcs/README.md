@@ -1,4 +1,4 @@
-# 🚁 JRFCQAI GCS Web Utility
+# 🚁 JRFCQAI GCS Web Utility (Arduino UNO-Q Applab Project)
 
 A high-performance, real-time Ground Control Station (GCS) web interface designed for telemetry monitoring, autonomous AI-driven flight, interactive mapping, and drone command control.
 
