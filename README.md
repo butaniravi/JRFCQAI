@@ -167,7 +167,7 @@ Watch the full build breakdown and flight demo on YouTube:
 
 ---
 
-  <img src="Photos%20and%20diagrams/connection_jrfcqai_v1.png" alt="JRFCQAI Hardware Wiring Diagram" width="700">
+  <img src="Photos%20and%20diagrams/Screenshot%20(406).png" alt="JRFCQAI GCS Webpage hosted by UNO Q with Live AI Video stream" width="700">
   <em>Figure 3: JRFCQAI GCS Webpage hosted by UNO Q with Live AI Video stream.</em>
   <br>
 
