@@ -1,10 +1,11 @@
-# 🚀 JRFCQAI: Dual-Brain Physical AI Fight Computer, Flight Controller & Ground Station all Developed on Arduino UNO Q
+# 🚀 JRFCQAI: Dual-Brain Physical AI Fight Computer, Flight Controller & Ground Station all Developed on Arduino UNO Q (Qualcomm® Dragonwing™ QRB2210 + STM32U585) 
 
 [![Track: Robotics](https://img.shields.io/badge/Track-Robotics%20-blue)](https://github.com)
 [![Board: Arduino UNO Q](https://img.shields.io/badge/Board-Arduino%20UNO%20Q-teal)](https://github.com)
 [![Status: Open Source](https://img.shields.io/badge/Status-Open--Source-brightgreen)](https://github.com)
 
-**Developer:** Ravi Butani  
+**Developer:** Ravi Chandulal Butani  
+**Guide:** Dr. Avani Vithalani  
 **Track:** Robotics & Autonomous UAV  
 **Board:** Arduino UNO Q (Qualcomm® Dragonwing™ QRB2210 + STM32U585)  
 **Project Status:** Open-Source Software & Hardware Framework  
