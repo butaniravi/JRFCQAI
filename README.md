@@ -14,7 +14,7 @@
 ## 📌 Project Overview
 <p align="center">
   <br>
-  <img src="Photos%20and%20diagrams/jrfcqai_main.png" alt="JRFCQAI Project Title Image" width="700">
+  <img src="Photos%20and%20diagrams/jrfcqai_title.png" alt="JRFCQAI Project Title Image" width="700">
   <br>
   <em>Figure : JRFCQAI Project Title Image.</em>
 </p>
